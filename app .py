@@ -1,33 +1,39 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[211]:
 
 
-from flask import Flask, request,render_template
+from flask import Flask, request,render_template 
 
 
-# In[ ]:
+# In[212]:
 
 
 import joblib
 
 
-# In[ ]:
+# In[213]:
 
 
 app = Flask(__name__)
 
 
-# In[ ]:
+# In[214]:
 
 
-@app.route("/", methods = ["GER","POST"])
+@app.route("/",methods = ["GET","POST"])
 def index():
     if request.method == "POST":
-        return(render_template("index.html", result1 = "OK", result2 = "OK"))
+        rates = float(request.form.get("rates"))
+        print(rates)
+        model1 = joblib.load("regression")
+        r1 = model1.predict([[rates]])
+        model2 = joblib.load("tree")
+        r2 = model2.predict([[rates]])
+        return(render_template("index.html", result1 = r1, result2 = r2))
     else:
-        return(render_template("index.html", result1 = "WAITING", result2 = "WAITING"))
+        return(render_template("index.html", result1 = "WATING", result2 = "WAITING"))
 
 
 # In[ ]:
